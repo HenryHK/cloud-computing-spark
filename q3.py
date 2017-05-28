@@ -62,10 +62,10 @@ if __name__ == "__main__":
     sc = SparkContext(appName="Task 3")
     
     # read data
-    measurements_ = sc.textFile("/share/cytometry/small").filter(measurements_filter).map(extract_measurement)
+    measurements_ = sc.textFile("/share/cytometry/large").filter(measurements_filter).map(extract_measurement)
 
     # read the result of q2
-    q2_center = np.asarray(sc.textFile("pyspark-small/q2").map(lambda x: x.strip().split('\t')).collect()).astype('float')
+    q2_center = np.asarray(sc.textFile("pyspark/q2").map(lambda x: x.strip().split('\t')).collect()).astype('float')
     initial_center = q2_center[:,-3:]
     number_of_data_each_cluster = q2_center[:,1]
     broad_cluster_center = sc.broadcast(initial_center)
@@ -98,4 +98,4 @@ if __name__ == "__main__":
     # final result
     number_of_cluster = new_data_9_percent.map(map_result).repartition(1).reduceByKey(lambda before,after: int(before)+int(after)).map(lambda x : (x[0],x[1],np.asarray(broad_cluster_center.value)[x[0]-1])).sortBy(lambda record: int(record[0]))
     result = number_of_cluster.map(lambda record: str(record[0])+'\t'+str(record[1])+'\t'+str(record[2][0])+'\t'+str(record[2][1])+'\t'+str(record[2][2]))
-    result.repartition(1).saveAsTextFile("pyspark-small/q3")
+    result.repartition(1).saveAsTextFile("pyspark/q3")

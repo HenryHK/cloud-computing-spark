@@ -27,7 +27,7 @@ def extract_measurement_function(record): # return the valid measurement and 1 o
 if __name__ == "__main__":
     sc = SparkContext(appName="Task 1")
     experiments = sc.textFile("/share/cytometry/experiments.csv") # Read files 'experiments'
-    measurements = sc.textFile("/share/cytometry/small") # Read files 'measurements'
+    measurements = sc.textFile("/share/cytometry/large") # Read files 'measurements'
 
     # First map is extract the reseacher, flatmap is :[(sample,researcher-1),(sample,researcher-2)] --->(sample,researcher-1) \n (sample,researcher-2) 
     extract_resercher = experiments.map(extract_reserchers_function).flatMap(lambda xs: [x for x in xs]) 
@@ -42,4 +42,4 @@ if __name__ == "__main__":
      # sorted the data and transfer the (1,2) -->1 + '\t'+2 
     join_resercher_measurement = sc.parallelize(sorted(join_resercher_measurement,key=lambda tup:(-tup[1], tup[0]))).map(lambda record: record[0]+'\t'+str(record[1])) 
     
-    join_resercher_measurement.repartition(1).saveAsTextFile("pyspark-small/q1") # Save it
+    join_resercher_measurement.repartition(1).saveAsTextFile("pyspark/q1") # Save it

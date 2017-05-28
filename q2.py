@@ -40,7 +40,7 @@ def map_result(record):
 if __name__ == "__main__":
     sc = SparkContext(appName="Task 2")
     ''' Read Data '''
-    measurements = sc.textFile("/share/cytometry/small")
+    measurements = sc.textFile("/share/cytometry/large")
     after_filter_measurement = measurements.filter(measurement_filter).map(extract_measurement) # with valid data ---> (sample,(Ly6C,CD11b,SCA1))
 
     ''' Initial the cluster center '''
@@ -71,4 +71,4 @@ if __name__ == "__main__":
     new_cluster_center_result = after_filter_measurement.map(map_result).repartition(1).reduceByKey(lambda before,after: int(before)+int(after)) # Give the data a cluster number
     number_of_cluster = new_cluster_center_result.map(lambda x : (x[0],x[1],np.asarray(broad_cluster_center.value)[x[0]-1])).sortBy(lambda record: int(record[0]))
     result = number_of_cluster.map(lambda record: str(record[0])+'\t'+str(record[1])+'\t'+str(record[2][0])+'\t'+str(record[2][1])+'\t'+str(record[2][2]))
-    result.repartition(1).saveAsTextFile("pyspark-small/q2")
+    result.repartition(1).saveAsTextFile("pyspark/q2")
