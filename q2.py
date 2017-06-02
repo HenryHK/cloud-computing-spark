@@ -44,7 +44,7 @@ if __name__ == "__main__":
     after_filter_measurement = measurements.filter(measurement_filter).map(extract_measurement) # with valid data ---> (sample,(Ly6C,CD11b,SCA1))
 
     ''' Initial the cluster center '''
-    number_of_cluster = 5
+    number_of_cluster = 4
     initial_cluster = np.random.rand(number_of_cluster,3) # generate 5 center randomly
     broad_cluster_center = sc.broadcast(initial_cluster) # As broadcast
     

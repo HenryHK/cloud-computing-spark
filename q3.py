@@ -75,7 +75,7 @@ if __name__ == "__main__":
     new_data_9_percent = measurements_.map(cluster_1).groupByKey().flatMap(group_map)
 
     # learning
-    number_of_cluster = 5
+    number_of_cluster = 4
     initial_cluster = np.random.rand(number_of_cluster,3) # Random generate the center
     # initial_cluster = initial_center
     broad_cluster_center = sc.broadcast(initial_cluster)
